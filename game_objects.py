@@ -106,7 +106,7 @@ if confirm == "y":
 old_tome = item_class.Item("Old tome", "A tattered leather tome with pages full of a mysterious script.", library)
 library.items.append(old_tome)
 
-map = item_class.Item("Map", "A map of the museum", location=None, use_func=actions.print_map(lambda: secret_room.visted))
+map = item_class.Item("Map", "A map of the museum", location=None, use_func=actions.print_map)
 map.picked_up = True
 player.inventory.append(map)
 
