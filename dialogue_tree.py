@@ -81,6 +81,23 @@ class Dialogue_Tree:
         self.update_paths(node.left, current_path + '0')
         self.update_paths(node.right, current_path + '1')
 
+    def check_and_remove(self, node):
+        """Helper function to check checkpoint conditions and remove nodes when checkpoint met"""
+
+        if node.checkpoint and node.checkpoint_condition and node.checkpoint_condition():
+            node_to_remove = node
+
+            if node.left:
+                node = node.left
+                self.remove(node_to_remove.path, 'left', node_to_remove.value)
+            elif node.right:
+                node = node.right
+                self.remove(node_to_remove.path, 'right', node_to_remove.value)
+            else:
+                node = None
+                self.remove(node_to_remove.path, None, node_to_remove.value)
+        
+        return node
 
     def contains(self, path, value):
         return self.contains_recurse(self.head, path, value)
@@ -96,28 +113,14 @@ class Dialogue_Tree:
             return self.contains_recurse(node.right, path[1:], value)
         return False
     
-    def traverse_dialogue(self, node):
+    def traverse_dialogue(self, node, character_name):
         # while there exists a node to traverse
         while node:
-            # checkpoint handling
-            if node.checkpoint:
-                # if node.checkpoint_condition exists and evaluates to True
-                if node.checkpoint_condition and node.checkpoint_condition():
-                    # remove checkpoint
-                    node.checkpoint = False
 
-                    node_to_remove = node
+            # check and remove passed checkpoints
+            node = self.check_and_remove(node)
 
-                    # move to next node
-                    if node.left:
-                        node = node.left
-                    elif node.right:
-                        node = node.right
-
-                    # FIX: branch traversal    
-                    self.remove(node_to_remove.path, None, node_to_remove.value)
-
-            print(node.value)
+            print(character_name + ': ' + node.value)
             time.sleep(1)
 
             # if node has an additional action, execute action

@@ -7,7 +7,6 @@ class Character:
         self.description = description
         self.location = location
         self.dialogues = dialogue_tree.Dialogue_Tree()
-        self.quest_location = None
 
     # Move character to a new room
     def move_rooms(self, room):
@@ -22,7 +21,7 @@ class Character:
         else:
             print("You talk to " + self.name)
             time.sleep(1)
-            self.dialogues.traverse_dialogue(self.dialogues.head)
+            self.dialogues.traverse_dialogue(self.dialogues.head, self.name)
 
     def print_character_description(self):
         print("You take a close look at " + self.name)

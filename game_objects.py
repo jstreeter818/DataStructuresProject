@@ -76,7 +76,9 @@ sculpture_garden.connect("south", cafe)
 foyer.visited = True
 
 # player
-player = player_class.Player("name", foyer)
+player = player_class.Player("Name", foyer)
+
+#"""
 
 # prompt user for their name and confirm    
 player_name = input("Enter your name: ")
@@ -97,6 +99,8 @@ if confirm == "y":
     print("Welcome, " + player_name)
     player.set_name(player_name)
     time.sleep(1)
+
+#"""
 
 # items
 old_tome = item_class.Item("Old tome", "A tattered leather tome with pages full of a mysterious script.", library)
@@ -124,10 +128,10 @@ old_man.dialogues.add('0000', "Magnificent! Return to me here once you've found 
 old_man.dialogues.add('0001', "I didn't think you'd actually refuse...", checkpoint=True, checkpoint_condition=lambda: old_tome in player.inventory)
 old_man.dialogues.add('00000', "You found the book! Brilliant! Let me take a look...")
 old_man.dialogues.add('00010', "Ah, you went and found it anyways. Well let me take a look, will you?")
-old_man.dialogues.add('000000', "Ah, just as I thought. I must go check something now, excuse me.", action=lambda: old_man.move_rooms(courtyard))
-old_man.dialogues.add('000100', "Ah, just as I thought. I must go check something now, excuse me.", action=lambda: old_man.move_rooms(courtyard))
-
-old_man.quest_location = library
+old_man.dialogues.add('000000', "Ah, just as I thought. I must go check something now, excuse me.", checkpoint=True, checkpoint_condition=lambda: player.location is courtyard, action=lambda: old_man.move_rooms(courtyard))
+old_man.dialogues.add('000100', "Ah, just as I thought. I must go check something now, excuse me.", checkpoint=True, checkpoint_condition=lambda: player.location is courtyard, action=lambda: old_man.move_rooms(courtyard))
+old_man.dialogues.add('0000000', ("Hello, " + player.name + ". This book you found, it has secrets about this museum..."), True)
+old_man.dialogues.add('0001000', ("Hello, " + player.name + ". This book you found, it has secrets about this museum..."), True)
 
 black_cat = character_class.Character("Black cat", "A lanky black cat, its eyes narrow as you gaze at it.", foyer)
 black_cat.dialogues.add(None, 'Mrowww', checkpoint=True, checkpoint_condition=lambda: cat_treats in player.inventory)

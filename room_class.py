@@ -9,6 +9,7 @@ class Room:
         self.characters = []
         self.items = []
         self.visited = False
+        self.looked_at = False
         
     # connects the room to another by a certain cardinal direction
     def connect(self, direction, room):
@@ -43,6 +44,8 @@ class Room:
                 print(str(self.characters[i].name) + ".")
 
     def print_items_in_room(self):
+        self.looked_at = True
+        
         print("You look around the " + self.name + " and spot:", end = " ")
 
         if len(self.items) == 0:

@@ -22,7 +22,7 @@ def main():
                     }
 
     # Print game intro/story/objective
-
+    """
     start_game = input("Venture forth? (y/n) ").strip().casefold()
     if start_game == "n":
         print("You decide to turn back, yet can't help but wonder what mysteries could be found inside...")
@@ -32,7 +32,9 @@ def main():
         quit_game = False
         print("You open the door and step inside...")
         time.sleep(1)
+    """
 
+    quit_game = False
     # game loop
     while quit_game == False:
 

@@ -8,11 +8,13 @@ class Item:
         # static cannot be picked up
         self.static = static
         self.been_used = False
+        self.looked_at = False
 
     def use_item(self):
         action = self.use_func
         action()
 
     def print_item_description(self):
+        self.looked_at = True
         print("You look closely at the " + self.name)
         print(self.description)
