@@ -1,6 +1,10 @@
-def load_map():
-    with open('map.txt', 'r') as file:
-        map_lines = file.readlines()
+def load_map(map_state):
+    if map_state:
+        with open('map_secret_room_unlocked.txt', 'r') as file:
+            map_lines = file.readlines()
+    else:
+        with open('map_secret_room_locked.txt', 'r') as file:
+            map_lines = file.readlines()
     return map_lines
 
 def print_map():
