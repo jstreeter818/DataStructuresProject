@@ -1,6 +1,6 @@
 import time
 import game_objects
-from commands import talk, look, move, use, inventory, get
+from commands import talk, look, move, use, inventory, get, commands
 
 def main():
 
@@ -18,7 +18,9 @@ def main():
                       "use": use,
                       "u": use,
                       "get": get,
-                      "g": get
+                      "g": get,
+                      "commands": commands,
+                      "c": commands
                     }
 
     # Print game intro/story/objective
@@ -51,7 +53,7 @@ def main():
         time.sleep(1)
         
         # prompts user for an action
-        print("Valid commands: talk, look, move, use, get, inventory, quit")
+        print("Valid commands: talk, look, move, use, get, inventory, commands, quit")
         time.sleep(1)
         player_action = input("What would you like to do? ").strip().casefold()
 
@@ -63,7 +65,7 @@ def main():
         while main_command not in valid_commands:
             print("'" + player_action + "' is not a recognized command.")
             time.sleep(1)
-            print("Valid commands: talk, look, move, use, get, inventory, quit")
+            print("Valid commands: talk, look, move, use, get, inventory, commands, quit")
             time.sleep(1)
             player_action = input("What would you like to do? ").strip().casefold()
 
@@ -107,6 +109,9 @@ def main():
                 if not argument:
                     argument = input("What do you want to pick up? ").strip().casefold()
                 valid_commands[main_command](game_objects.player, game_objects.player.location, argument)
+
+            elif main_command in ["commands", "c"]:
+                valid_commands[main_command]()
 
             else:
                 valid_commands[main_command](game_objects.player, game_objects.player.location)

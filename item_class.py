@@ -1,3 +1,5 @@
+import time
+
 class Item:
     def __init__(self, name, description, location, static = False, use_func = None):
         self.name = name
@@ -14,7 +16,12 @@ class Item:
         action = self.use_func
         action()
 
-    def print_item_description(self):
+    def look_item(self):
         self.looked_at = True
         print("You look closely at the " + self.name)
-        print(self.description)
+        time.sleep(1)
+
+        for line in self.description:
+            print(line)
+            time.sleep(1)
+

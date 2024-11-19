@@ -1,7 +1,7 @@
 import time
 
 class Node:
-    def __init__(self, value, left_key, right_key, checkpoint, checkpoint_condition, action, path = None):
+    def __init__(self, value, left_key, right_key, checkpoint, checkpoint_condition, action, path):
         # the dialogue
         self.value = value
         # path of the node position, a string of binary numbers
@@ -98,20 +98,6 @@ class Dialogue_Tree:
                 self.remove(node_to_remove.path, None, node_to_remove.value)
         
         return node
-
-    def contains(self, path, value):
-        return self.contains_recurse(self.head, path, value)
-        
-    def contains_recurse(self, node, path, value):
-        if node is None:
-            return False
-        if node.value == value:
-            return True
-        if path and path[0] == '0':
-            return self.contains_recurse(node.left, path[1:], value)
-        if path and path[0] == '1':
-            return self.contains_recurse(node.right, path[1:], value)
-        return False
     
     def traverse_dialogue(self, node, character_name):
         # while there exists a node to traverse
@@ -126,6 +112,7 @@ class Dialogue_Tree:
             # if node has an additional action, execute action
             if node.action:
                 node.action()
+                time.sleep(1)
 
             # keep track of node to remove later
             node_to_remove = node
@@ -162,16 +149,3 @@ class Dialogue_Tree:
                 elif path == node.right_key:
                     node = node.right
                     self.remove(node_to_remove.path, 'right', node_to_remove.value)
-
-
-test_dialogue = Dialogue_Tree().add(None, "Do you want waffles or pancakes?", "waffles", "pancakes")
-test_dialogue.add('0', "Do you want coffee or tea with your waffles?", "coffee", "tea")
-test_dialogue.add('1', "Do you want milk or juice with your pancakes?", "milk", "juice")
-test_dialogue.add('00', "You chose waffles and coffee.", None, None, True)
-test_dialogue.add('01', "You chose waffles and tea.", None, None, True)
-test_dialogue.add('10', "You chose pancakes and milk.", None, None, True)
-test_dialogue.add('11', "You chose pancakes and juice.", None, None, True)
-
-
-#test_dialogue.traverse_dialogue(test_dialogue.head)
-#test_dialogue.traverse_dialogue(test_dialogue.head)

@@ -2,10 +2,6 @@ import time
 
 # all the commands
 def talk(location, character_name):
-    if 'to' in character_name.split():
-        print("Make sure when using the talk command to just type 'talk' or 't' followed directly by the character's name, rather than 'talk to [character name]'")
-        time.sleep(1)
-
     # find character to talk to    
     for character in location.characters:
         if character.name.lower() == character_name:
@@ -17,6 +13,9 @@ def talk(location, character_name):
     
 
 def look(player, location, look_at):
+    if look_at == 'room':
+        look_at = player.location.name.casefold()
+
     if look_at == location.name.casefold():
         location.print_items_in_room()
         return
@@ -30,7 +29,7 @@ def look(player, location, look_at):
     if location.looked_at:
         for item in location.items:
             if look_at == item.name.casefold():
-                item.print_item_description()
+                item.look_item()
                 return
     
     print("There is no '" + look_at + "' to look at.")
@@ -125,18 +124,36 @@ def use(player, location, object):
     for item in location.items:
         if item.name.casefold() == object:
 
-            # player must have looked at item first to be able to use it
-            if item.looked_at:
-                if item.use_func:
-                    print("You use " + item.name + ".")
-                    time.sleep(1)
-                    item.use_item()
-                    time.sleep(1)
-                    return
-                else:
-                    print(item.name + " cannot be used.")
-                    time.sleep(1)
-                    return
+            if item.use_func:
+                print("You use " + item.name + ".")
+                time.sleep(1)
+                item.use_item()
+                time.sleep(1)
+                return
+            else:
+                print(item.name + " cannot be used.")
+                time.sleep(1)
+                return
 
     print("'" + object + "' is not in your inventory.")
+    time.sleep(1)
+
+def commands():
+    print("Here is an explanation on how to use commands.")
+    time.sleep(1)
+    print("Valid commands are: talk, look, move, use, get, inventory, quit, and commands.")
+    time.sleep(1)
+    print("You can also use just the first letter of each command. So 't' is the same as 'talk', for example.")
+    time.sleep(1)
+    print("Some commands can take additional arguments. Talk, look, move, use, and get all can take arguments.")
+    time.sleep(1)
+    print("For commands that take arguments, type the command followed by the argument, with no additional filler words.")
+    time.sleep(1)
+    print("For example, for move, you can type 'move north' or 'm n'. For directional arguments, you can also just enter the first letter of the direction.")
+    time.sleep(1)
+    print("For talk, look, use, and get, the argument is the name of the character, item, or room.")
+    time.sleep(1)
+    print("To look around a room, you can enter 'look [room name]', or just 'look room'.")
+    time.sleep(1)
+    print("Commands and arguments are NOT case sensitive, but you must spell them correctly, including spaces if an argument has spaces.")
     time.sleep(1)

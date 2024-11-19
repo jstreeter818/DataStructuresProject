@@ -2,8 +2,10 @@ import player_class
 import room_class
 import character_class
 import item_class
-import item_actions as actions
+import item_actions
+import npc_actions
 import time
+import item_descriptions
 
 # Rooms
 rooms = []
@@ -53,10 +55,7 @@ main_gallery.connect("east", hallway)
 main_gallery.connect("north", portrait_gallery)
 
 portrait_gallery.connect("south", main_gallery)
-portrait_gallery.connect("west", secret_room)
 portrait_gallery.connect("north", bathrooms)
-
-secret_room.connect("east", portrait_gallery)
 
 bathrooms.connect("south", portrait_gallery)
 
@@ -103,47 +102,78 @@ if confirm == "y":
 #"""
 
 # items
-old_tome = item_class.Item("Old tome", "A tattered leather tome with pages full of a mysterious script.", library)
+chandelier = item_class.Item("Chandelier", item_descriptions.chandelier, foyer, True)
+foyer.items.append(chandelier)
+
+painting = item_class.Item("Landscape Painting", item_descriptions.landscape_painting, main_gallery, True)
+main_gallery.items.append(painting)
+
+old_tome = item_class.Item("Old tome", "A tattered leather tome with pages full of a mysterious script.", library, use_func=item_actions.read_tome)
 library.items.append(old_tome)
 
-map = item_class.Item("Map", "A map of the museum", location=None, use_func=actions.print_map)
-map.picked_up = True
-player.inventory.append(map)
+map = item_class.Item("Map", "A map of the museum", location=None, use_func=item_actions.print_map)
 
-lamp = item_class.Item("Strange lamp", "There's something off about this lamp...", portrait_gallery, static=True)
+lamp = item_class.Item("Strange lamp", "There's something off about this lamp...", portrait_gallery, static=True, use_func=item_actions.use_lamp)
 portrait_gallery.items.append(lamp)
 
 cat_treats = item_class.Item("Cat treats", "An opened bag of cat treats,", cafe)
 cafe.items.append(cat_treats)
 
+decoder = item_class.Item("Decoder", "A circular device that maps strange symbols to familiar ones you know.", secret_room)
+secret_room.items.append(decoder)
+
+stone_statue = item_class.Item("Stone statue", "The expression carved into the stone face fills you with a strange sadness...", sculpture_garden, static=True)
+sculpture_garden.items.append(stone_statue)
+
+water_fountain = item_class.Item("Water fountain", "Old coins lay scattered along the bottom of the ornate fountain, reflecting sparkles of light.", courtyard, static=True)
+courtyard.items.append(water_fountain)
+
+coin = item_class.Item("Coin", "An old silver dollar coin, tarnished with age", mail_room, use_func=item_actions.toss_coin)
+mail_room.items.append(coin)
+
 # characters
 characters = []
 
-old_man = character_class.Character("Old man", "An old man lurks in the shadows... he's holding a small bag.", foyer)
-old_man.dialogues.add(None, "Hello, traveler. What shall I call you?")
-old_man.dialogues.add('0', ('Ahh, ' + player.name + ', welcome to the museum.'))
-old_man.dialogues.add('00', "May I ask a favor of you...?")
-old_man.dialogues.add('000', "Well... there's a library somewhere around here... and a certain book I'm looking for. Think you can find it and bring it to me?", left_key="yes", right_key="no")
-old_man.dialogues.add('0000', "Magnificent! Return to me here once you've found the book.", checkpoint=True, checkpoint_condition=lambda: old_tome in player.inventory) # checkpoint condition as lambda to check during runtime
-old_man.dialogues.add('0001', "I didn't think you'd actually refuse...", checkpoint=True, checkpoint_condition=lambda: old_tome in player.inventory)
-old_man.dialogues.add('00000', "You found the book! Brilliant! Let me take a look...")
-old_man.dialogues.add('00010', "Ah, you went and found it anyways. Well let me take a look, will you?")
-old_man.dialogues.add('000000', "Ah, just as I thought. I must go check something now, excuse me.", checkpoint=True, checkpoint_condition=lambda: player.location is courtyard, action=lambda: old_man.move_rooms(courtyard))
-old_man.dialogues.add('000100', "Ah, just as I thought. I must go check something now, excuse me.", checkpoint=True, checkpoint_condition=lambda: player.location is courtyard, action=lambda: old_man.move_rooms(courtyard))
-old_man.dialogues.add('0000000', ("Hello, " + player.name + ". This book you found, it has secrets about this museum..."), True)
-old_man.dialogues.add('0001000', ("Hello, " + player.name + ". This book you found, it has secrets about this museum..."), True)
+Eugene = character_class.Character("Eugene", "A short stout man wearing a security uniform.", foyer)
+Eugene.dialogues.add(None, "My, it's been a while since I've seen a new face around here. Welcome to Cairn's Keep, historic museum.")
+Eugene.dialogues.add('0', "My name is Eugene. I'm the security around here, though there's not much need for security when people don't come around here like they used to...")
+Eugene.dialogues.add('00', "But anyways, you are...?")
+Eugene.dialogues.add('000', ("Pleasure to meet you, " + player.name + ". Here, take this."), action=npc_actions.give_map)
+Eugene.dialogues.add('0000', "Well, enjoy your visit, and if you have any questions, don't be afriad to ask, I'll be around.", action=lambda: Eugene.move_rooms(main_gallery))
+
+#Eugene.dialogues.add('00', "May I ask a favor of you...?")
+#Eugene.dialogues.add('000', "Well... there's a library somewhere around here... and a certain book I'm looking for. Think you can find it and bring it to me?", left_key="yes", right_key="no")
+#Eugene.dialogues.add('0000', "Magnificent! Return to me here once you've found the book.", checkpoint=True, checkpoint_condition=lambda: old_tome in player.inventory) # checkpoint condition as lambda to check during runtime
+#Eugene.dialogues.add('0001', "I didn't think you'd actually refuse...", checkpoint=True, checkpoint_condition=lambda: old_tome in player.inventory)
+#Eugene.dialogues.add('00000', "You found the book! Brilliant! Let me take a look...")
+#Eugene.dialogues.add('00010', "Ah, you went and found it anyways. Well let me take a look, will you?")
+#Eugene.dialogues.add('000000', "Ah, just as I thought. I must go check something now, excuse me.", checkpoint=True, checkpoint_condition=lambda: player.location is courtyard, action=lambda: Eugene.move_rooms(courtyard))
+#Eugene.dialogues.add('000100', "Ah, just as I thought. I must go check something now, excuse me.", checkpoint=True, checkpoint_condition=lambda: player.location is courtyard, action=lambda: Eugene.move_rooms(courtyard))
+#Eugene.dialogues.add('0000000', ("Hello, " + player.name + ". This book you found, it has secrets about this museum..."))
+#Eugene.dialogues.add('0001000', ("Hello, " + player.name + ". This book you found, it has secrets about this museum..."))
+#Eugene.dialogues.add('00000000', "You may have noticed the contents of the book are written in an obscure script. I'm not sure what it is, but I swear I've seen these symbols somewhere.")
+#Eugene.dialogues.add('00010000', "You may have noticed the contents of the book are written in an obscure script. I'm not sure what it is, but I swear I've seen these symbols somewhere.")
+#Eugene.dialogues.add('000000000', "There must be some way to decipher this code. I believe there is something important written here.", True, checkpoint_condition=lambda: decoder in player.inventory)
+#Eugene.dialogues.add('000100000', "There must be some way to decipher this code. I believe there is something important written here.", True, checkpoint_condition=lambda: decoder in player.inventory)
+#Eugene.dialogues.add('0000000000', ("What's that? You found a decoder for the tome? How marvelous. You, " + player.name + ", are quite the clever nut aren't you!"))
+#Eugene.dialogues.add('0001000000', ("What's that? You found a decoder for the tome? How marvelous. You, " + player.name + ", are quite the clever nut aren't you!"))
 
 black_cat = character_class.Character("Black cat", "A lanky black cat, its eyes narrow as you gaze at it.", foyer)
 black_cat.dialogues.add(None, 'Mrowww', checkpoint=True, checkpoint_condition=lambda: cat_treats in player.inventory)
-black_cat.dialogues.add('0', "The cat sniffs your bag that holds the cat treats. It obviously wants some.", left_key="give treat", right_key="give all treats")
-black_cat.dialogues.add('00', "You give the cat a treat and purrs immediately follow")
-black_cat.dialogues.add('01', "You dump out the entire bag of treats for the cat who appears very happy because of this", action=lambda: player.inventory.remove(cat_treats))
+black_cat.dialogues.add('0', "*sniff sniff*", left_key="give treat", right_key="give all treats")
+black_cat.dialogues.add('00', "Mrow! *crunch crunch*")
+black_cat.dialogues.add('01', "Purrrr *crunch crunch*", action=lambda: player.inventory.remove(cat_treats))
 black_cat.dialogues.add('000', "Mrowww", checkpoint=True)
 black_cat.dialogues.add('010', "Mrowww.", checkpoint=True)
 
-foyer.characters.append(old_man)
+librarian = character_class.Character("Librarian", "The museum librarian", library)
+librarian.dialogues.add(None, "Hello there, you've found historic Cairn's library.")
+
+foyer.characters.append(Eugene)
 foyer.characters.append(black_cat)
 
-characters.append(old_man)
-characters.append(black_cat)
+library.characters.append(librarian)
 
+characters.append(Eugene)
+characters.append(black_cat)
+characters.append(librarian)
