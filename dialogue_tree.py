@@ -1,7 +1,8 @@
+'''containts Node and Dialogue_Tree classes for traversing NPC dialogue'''
 import time
 
 class Node:
-    def __init__(self, value, left_key, right_key, checkpoint, checkpoint_condition, action, path):
+    def __init__(self, value, pause, left_key, right_key, checkpoint, checkpoint_condition, action, path):
         # the dialogue
         self.value = value
         # path of the node position, a string of binary numbers
@@ -13,6 +14,8 @@ class Node:
         # key word for child nodes
         self.left_key = left_key
         self.right_key = right_key
+        # pause/breakpoint in dialogue different from a checkpoint
+        self.pause = pause
         # Dialogue checkpoint - defaults False
         self.checkpoint = checkpoint
         # checkpoint condition is a lambda function
@@ -24,23 +27,23 @@ class Dialogue_Tree:
     def __init__(self):
         self.head = None
     
-    def add(self, path, value, checkpoint = False, checkpoint_condition = None, left_key = None, right_key = None, action = None):
-        self.head = self.add_recurse(self.head, path, value, left_key, right_key, '', checkpoint, checkpoint_condition, action)
+    def add(self, path, value, pause = False, checkpoint = False, checkpoint_condition = None, left_key = None, right_key = None, action = None):
+        self.head = self.add_recurse(self.head, path, value, pause, left_key, right_key, '', checkpoint, checkpoint_condition, action)
         return self
     
-    def add_recurse(self, node, path, value, left_key, right_key, current_path, checkpoint, checkpoint_condition, action):
+    def add_recurse(self, node, path, value, pause, left_key, right_key, current_path, checkpoint, checkpoint_condition, action):
         # path is empty, correct position found, add node
         if not path:
-            return Node(value, left_key, right_key, checkpoint, checkpoint_condition, action, current_path)
+            return Node(value, pause, left_key, right_key, checkpoint, checkpoint_condition, action, current_path)
         # path continues beyond existing nodes
         if node is None:
             node = Node(None)
         
         # recursively traverse path
         if path[0] == '0':
-            node.left = self.add_recurse(node.left, path[1:], value, left_key, right_key, current_path + '0', checkpoint, checkpoint_condition, action)
+            node.left = self.add_recurse(node.left, path[1:], value, pause, left_key, right_key, current_path + '0', checkpoint, checkpoint_condition, action)
         if path[0] == '1':
-            node.right = self.add_recurse(node.right, path[1:], value, left_key, right_key, current_path + '1', checkpoint, checkpoint_condition, action)
+            node.right = self.add_recurse(node.right, path[1:], value, pause, left_key, right_key, current_path + '1', checkpoint, checkpoint_condition, action)
         
         return node
 
@@ -121,6 +124,8 @@ class Dialogue_Tree:
             if node.checkpoint:
                 return
             
+            pause_traversal = True if node.pause else False
+            
             # no more branches to traverse
             if node.left is None and node.right is None:
                 self.remove(node_to_remove.path, None, node_to_remove.value)
@@ -149,3 +154,7 @@ class Dialogue_Tree:
                 elif path == node.right_key:
                     node = node.right
                     self.remove(node_to_remove.path, 'right', node_to_remove.value)
+            
+            # if node is a pause point, pause dialogue
+            if pause_traversal:
+                return

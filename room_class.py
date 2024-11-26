@@ -14,6 +14,17 @@ class Room:
     # connects the room to another by a certain cardinal direction
     def connect(self, direction, room):
         self.connections[direction] = room
+
+        if direction == "north":
+            opposite_direction = "south"
+        elif direction == "south":
+            opposite_direction = "north"
+        elif direction == "east":
+            opposite_direction = "west"
+        elif direction == "west":
+            opposite_direction = "east"
+        
+        room.connections[opposite_direction] = self
         
     # prints a list of viable moves in the room
     def print_viable_moves(self):

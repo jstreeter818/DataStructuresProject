@@ -32,9 +32,12 @@ def look(player, location, look_at):
                 item.look_item()
                 return
     
+    for item in player.inventory:
+        if look_at == item.name.casefold():
+            item.look_item()
+            return
+    
     print("There is no '" + look_at + "' to look at.")
-    time.sleep(1)
-    print("To 'look' at something or someone, use the command 'look' or 'l' followed by the item, room, or character's name.")
     time.sleep(1)
 
 def move(player, location, direction):
@@ -89,7 +92,7 @@ def get(player, location, to_get):
                     item.picked_up = True
                     item.location = None
                     location.items.remove(item)
-                    item.print_item_description()
+                    item.look_item()
                     time.sleep(1)
                     print("You pick up " + item.name + " and put it in your inventory.")
                     time.sleep(1)

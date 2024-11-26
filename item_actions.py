@@ -1,3 +1,5 @@
+'''contains functions associated with using items'''
+
 def load_map():
     from game_objects import secret_room
     if secret_room.visited:

@@ -1,3 +1,5 @@
+'''containts initializations of all characters, rooms, items'''
+
 import player_class
 import room_class
 import character_class
@@ -84,17 +86,17 @@ player_name = input("Enter your name: ")
 confirm = input("Confirm '" + player_name + "'? (y/n) ").strip().casefold()
 
 # allows user to re-enter a name until they confirm
-while confirm != "y":
-    if confirm != "n":
+while confirm not in ['y', 'yes']:
+    if confirm not in ['n', 'no']:
         print("'" + confirm + "' is not a valid command.")
         time.sleep(0.5)
         confirm = input("Confirm '" + player_name + "'? (y/n) ").strip().casefold()
-    if confirm == "n":
+    if confirm in ['n', 'no']:
         player_name = input("Enter your name: ")
         confirm = input("Confirm '" + player_name + "'? (y/n) ").strip().casefold()
     
 # welcomes player by name and initializes player object
-if confirm == "y":
+if confirm in ['y', 'yes']:
     print("Welcome, " + player_name)
     player.set_name(player_name)
     time.sleep(1)
@@ -108,31 +110,48 @@ foyer.items.append(chandelier)
 painting = item_class.Item("Landscape Painting", item_descriptions.landscape_painting, main_gallery, True)
 main_gallery.items.append(painting)
 
-old_tome = item_class.Item("Old tome", "A tattered leather tome with pages full of a mysterious script.", library, use_func=item_actions.read_tome)
+old_tome = item_class.Item("Old tome", item_descriptions.old_tome, library, use_func=item_actions.read_tome)
 library.items.append(old_tome)
 
-map = item_class.Item("Map", "A map of the museum", location=None, use_func=item_actions.print_map)
+map = item_class.Item("Map", ["A map of the museum"], location=None, use_func=item_actions.print_map)
 
-lamp = item_class.Item("Strange lamp", "There's something off about this lamp...", portrait_gallery, static=True, use_func=item_actions.use_lamp)
+lamp = item_class.Item("Strange lamp", item_descriptions.lamp, portrait_gallery, static=True, use_func=item_actions.use_lamp)
 portrait_gallery.items.append(lamp)
 
-cat_treats = item_class.Item("Cat treats", "An opened bag of cat treats,", cafe)
+cat_treats = item_class.Item("Cat treats", item_descriptions.cat_treats, cafe)
 cafe.items.append(cat_treats)
 
-decoder = item_class.Item("Decoder", "A circular device that maps strange symbols to familiar ones you know.", secret_room)
+decoder = item_class.Item("Decoder", item_descriptions.decoder, secret_room)
 secret_room.items.append(decoder)
 
-stone_statue = item_class.Item("Stone statue", "The expression carved into the stone face fills you with a strange sadness...", sculpture_garden, static=True)
+stone_statue = item_class.Item("Stone statue", item_descriptions.stone_statue, sculpture_garden, static=True)
 sculpture_garden.items.append(stone_statue)
 
-water_fountain = item_class.Item("Water fountain", "Old coins lay scattered along the bottom of the ornate fountain, reflecting sparkles of light.", courtyard, static=True)
+water_fountain = item_class.Item("Water fountain", item_descriptions.water_fountain, courtyard, static=True)
 courtyard.items.append(water_fountain)
 
-coin = item_class.Item("Coin", "An old silver dollar coin, tarnished with age", mail_room, use_func=item_actions.toss_coin)
+coin = item_class.Item("Coin", item_descriptions.coin, mail_room, use_func=item_actions.toss_coin)
 mail_room.items.append(coin)
 
 # characters
 characters = []
+
+Duncan = character_class.Character("Duncan", "squeezly...?", foyer) # Duncan Akins
+Duncan.dialogues.add(None, ". . .", left_key="ring bell", right_key="clear throat", action=lambda: print("He's slumped over the desk... snoring."))
+Duncan.dialogues.add('0', "Goodness! My apologies for the lack of professionalism, that's quite embarrassing on my part. How silly to let myself fall asleep on the job.")
+Duncan.dialogues.add('1', "Goodness! My apologies for the lack of professionalism, that's quite embarrassing on my part. How silly to let myself fall asleep on the job.")
+Duncan.dialogues.add('00', "Welcome to Cairn's Keep. You don't look like you've been here before. It is really quite nice to see a new face stopping in.")
+Duncan.dialogues.add('10', "Welcome to Cairn's Keep. You don't look like you've been here before. It is really quite nice to see a new face stopping in.")
+Duncan.dialogues.add('000', "Oh, my name's Duncan. I'm the owner and founder, but I also help keep the place running. It's truly a pleasure to meet you...")
+Duncan.dialogues.add('100', "Oh, my name's Duncan. I'm the owner and founder, but I also help keep the place running. It's truly a pleasure to meet you...")
+Duncan.dialogues.add('0000', (player.name + "!"), action=lambda: npc_actions.handshake(Duncan))
+Duncan.dialogues.add('1000', (player.name + "!"), action=lambda: npc_actions.handshake(Duncan))
+Duncan.dialogues.add('00000', "Well I'll let you explore this place on your own. Here's a map of the building to help you get around.", action=npc_actions.give_map)
+Duncan.dialogues.add('10000', "Well I'll let you explore this place on your own. Here's a map of the building to help you get around.", action=npc_actions.give_map)
+Duncan.dialogues.add('000000', "If you have any questions, I'll be around, so don't be afraid to ask. Enjoy your visit at Cairn's Keep!", pause=True)
+Duncan.dialogues.add('100000', "If you have any questions, I'll be around, so don't be afraid to ask. Enjoy your visit at Cairn's Keep!", pause=True)
+Duncan.dialogues.add('0000000', "The stone used to construct Cairn's Keep was actually sourced locally from the area when it was built. There's a lot of history to this place.", checkpoint=True)
+Duncan.dialogues.add('1000000', "The stone used to construct Cairn's Keep was actually sourced locally from the area when it was built. There's a lot of history to this place.", checkpoint=True)
 
 Eugene = character_class.Character("Eugene", "A short stout man wearing a security uniform.", foyer)
 Eugene.dialogues.add(None, "My, it's been a while since I've seen a new face around here. Welcome to Cairn's Keep, historic museum.")
@@ -171,9 +190,11 @@ librarian.dialogues.add(None, "Hello there, you've found historic Cairn's librar
 
 foyer.characters.append(Eugene)
 foyer.characters.append(black_cat)
+foyer.characters.append(Duncan)
 
 library.characters.append(librarian)
 
 characters.append(Eugene)
 characters.append(black_cat)
 characters.append(librarian)
+characters.append(Duncan)
