@@ -1,1 +1,0 @@
-'''contains functions for evaluating quest advancement'''
