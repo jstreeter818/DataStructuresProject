@@ -1,8 +1,10 @@
+'''holds the gameloop'''
+
 import time
 import objects.game_objects as game_objects
 from main.commands import talk, look, move, use, inventory, get, commands
 
-def main():
+def run_game():
 
     # library mapping valid command strings to command
     valid_commands = {"talk": talk,
@@ -114,6 +116,4 @@ def main():
                 valid_commands[main_command]()
 
             else:
-                valid_commands[main_command](game_objects.player, game_objects.player.location)
-        
-main()
+                valid_commands[main_command](game_objects.player)

@@ -1,5 +1,5 @@
-def handshake(character):
-    print("*" + character.name + " shakes your hand*")
+def handshake(character_name):
+    print("*" + character_name + " shakes your hand*")
 
 def give_map():
     from objects.game_objects import player, map

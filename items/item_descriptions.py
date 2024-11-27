@@ -18,3 +18,9 @@ stone_statue = ["The expression carved into the stone face fills you with a stra
 water_fountain = ["Old coins lay scattered along the bottom of the ornate fountain, reflecting sparkles of light."]
 
 coin = ["An old silver dollar coin, tarnished with age"]
+
+broken_clock = ["An old grandfather clock.",
+                "The minute hand keeps ticking in place"]
+
+fixed_clock = ["An old grandfather clock.",
+               "It really wasn't that hard to fix..."]

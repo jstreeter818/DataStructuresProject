@@ -10,7 +10,6 @@ def talk(location, character_name):
             return
     print(character_name + " is not here.")
     time.sleep(1)
-    
 
 def look(player, location, look_at):
     if look_at == 'room':
@@ -76,7 +75,7 @@ def move(player, location, direction):
         player.rooms_visited.add(new_location)
     time.sleep(1)
 
-def inventory(player, location):
+def inventory(player):
     player.print_inventory()
     time.sleep(1)
 

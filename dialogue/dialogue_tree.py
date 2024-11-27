@@ -2,7 +2,7 @@
 import time
 
 class Node:
-    def __init__(self, value, pause, left_key, right_key, checkpoint, checkpoint_condition, action, path):
+    def __init__(self, value, pause, left_key, right_key, checkpoint, action, path):
         # the dialogue
         self.value = value
         # path of the node position, a string of binary numbers
@@ -18,32 +18,31 @@ class Node:
         self.pause = pause
         # Dialogue checkpoint - defaults False
         self.checkpoint = checkpoint
-        # checkpoint condition is a lambda function
-        self.checkpoint_condition = checkpoint_condition
         # additional action to be executed with dialogue - defaults None
         self.action = action
 
 class Dialogue_Tree:
-    def __init__(self):
+    def __init__(self, questline=None):
         self.head = None
+        self.questline = questline
     
-    def add(self, path, value, pause = False, checkpoint = False, checkpoint_condition = None, left_key = None, right_key = None, action = None):
-        self.head = self.add_recurse(self.head, path, value, pause, left_key, right_key, '', checkpoint, checkpoint_condition, action)
+    def add(self, path, value, pause = False, checkpoint = False, left_key = None, right_key = None, action = None):
+        self.head = self.add_recurse(self.head, path, value, pause, left_key, right_key, '', checkpoint, action)
         return self
     
-    def add_recurse(self, node, path, value, pause, left_key, right_key, current_path, checkpoint, checkpoint_condition, action):
+    def add_recurse(self, node, path, value, pause, left_key, right_key, current_path, checkpoint, action):
         # path is empty, correct position found, add node
         if not path:
-            return Node(value, pause, left_key, right_key, checkpoint, checkpoint_condition, action, current_path)
+            return Node(value, pause, left_key, right_key, checkpoint, action, current_path)
         # path continues beyond existing nodes
         if node is None:
             node = Node(None)
         
         # recursively traverse path
         if path[0] == '0':
-            node.left = self.add_recurse(node.left, path[1:], value, pause, left_key, right_key, current_path + '0', checkpoint, checkpoint_condition, action)
+            node.left = self.add_recurse(node.left, path[1:], value, pause, left_key, right_key, current_path + '0', checkpoint, action)
         if path[0] == '1':
-            node.right = self.add_recurse(node.right, path[1:], value, pause, left_key, right_key, current_path + '1', checkpoint, checkpoint_condition, action)
+            node.right = self.add_recurse(node.right, path[1:], value, pause, left_key, right_key, current_path + '1', checkpoint, action)
         
         return node
 
@@ -86,8 +85,10 @@ class Dialogue_Tree:
 
     def check_and_remove(self, node):
         """Helper function to check checkpoint conditions and remove nodes when checkpoint met"""
+        
+        checkpoint_passed = self.questline.check_and_progress()
 
-        if node.checkpoint and node.checkpoint_condition and node.checkpoint_condition():
+        if checkpoint_passed:
             node_to_remove = node
 
             if node.left:
@@ -125,7 +126,7 @@ class Dialogue_Tree:
                 return
             
             pause_traversal = True if node.pause else False
-            
+
             # no more branches to traverse
             if node.left is None and node.right is None:
                 self.remove(node_to_remove.path, None, node_to_remove.value)
@@ -141,20 +142,24 @@ class Dialogue_Tree:
 
             # if two branches are present, get path from user
             else:
-                path = input(node.left_key + " or " + node.right_key + "? ").strip().casefold()
+                path = input("(1) " + node.left_key + " or (2) " + node.right_key + "? ").strip()
 
-                while path not in [node.left_key, node.right_key]:
+                while path not in ['1', '2']:
                     print("'" + path + "' is an invalid choice.")
-                    path = input(node.left_key + " or " + node.right_key + "? ").strip().casefold()
+                    path = input("(1) " + node.left_key + " or (2) " + node.right_key + "? ").strip()
                 
                 # traverse based on path
-                if path == node.left_key:
+                if path == '1':
+                    print("*" + node.left_key + "*")
                     node = node.left
                     self.remove(node_to_remove.path, 'left', node_to_remove.value)
-                elif path == node.right_key:
+                elif path == '2':
+                    print("*" + node.right_key + "*")
                     node = node.right
                     self.remove(node_to_remove.path, 'right', node_to_remove.value)
-            
+                
+                time.sleep(1)
+
             # if node is a pause point, pause dialogue
             if pause_traversal:
                 return

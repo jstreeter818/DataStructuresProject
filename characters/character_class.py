@@ -2,11 +2,11 @@ import time
 import dialogue.dialogue_tree as dialogue_tree
 # Character class to make NPC's
 class Character:
-    def __init__(self, name, description, location):
+    def __init__(self, name, description, location, dialogue):
         self.name = name
         self.description = description
         self.location = location
-        self.dialogues = dialogue_tree.Dialogue_Tree()
+        self.dialogue = dialogue
 
     # Move character to a new room
     def move_rooms(self, room):
@@ -16,12 +16,12 @@ class Character:
     
     # print character dialogue
     def print_dialogue(self):
-        if self.dialogues.head == None:
+        if self.dialogue.head == None:
             print(self.name + " has nothing to say to you.")
         else:
             print("You talk to " + self.name)
             time.sleep(1)
-            self.dialogues.traverse_dialogue(self.dialogues.head, self.name)
+            self.dialogue.traverse_dialogue(self.dialogue.head, self.name)
 
     def print_character_description(self):
         print("You take a close look at " + self.name)

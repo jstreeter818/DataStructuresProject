@@ -13,8 +13,10 @@ class Item:
         self.looked_at = False
 
     def use_item(self):
-        action = self.use_func
-        action()
+        self.use_func()
+        self.been_used = True
+        time.sleep(1)
+
 
     def look_item(self):
         self.looked_at = True
@@ -24,4 +26,3 @@ class Item:
         for line in self.description:
             print(line)
             time.sleep(1)
-

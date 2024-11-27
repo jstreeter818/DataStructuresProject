@@ -51,8 +51,10 @@ portrait_gallery.connect("north", bathrooms)
 library.connect("east", storage)
 courtyard.connect("east", cafe)
 cafe.connect("north", sculpture_garden)
+portrait_gallery.connect("west", secret_room)
 
 foyer.visited = True
+secret_room.locked = True
 
 player = player_class.Player("Name", foyer)
 
@@ -77,6 +79,9 @@ if confirm in ['y', 'yes']:
     time.sleep(1)
 
 # items
+broken_clock = item_class.Item("Broken Clock", item_descriptions.broken_clock, foyer, True, item_actions.fix_clock)
+foyer.items.append(broken_clock)
+
 chandelier = item_class.Item("Chandelier", item_descriptions.chandelier, foyer, True)
 foyer.items.append(chandelier)
 
@@ -107,67 +112,14 @@ coin = item_class.Item("Coin", item_descriptions.coin, mail_room, use_func=item_
 mail_room.items.append(coin)
 
 # characters
+import dialogue.dialogues as dialogues
 characters = []
 
-Duncan = character_class.Character("Duncan", "squeezly...?", foyer) # Duncan Akins
-Duncan.dialogues.add(None, ". . .", left_key="ring bell", right_key="clear throat", action=lambda: print("He's slumped over the desk... snoring."))
-Duncan.dialogues.add('0', "Goodness! My apologies for the lack of professionalism, that's quite embarrassing on my part. How silly to let myself fall asleep on the job.")
-Duncan.dialogues.add('1', "Goodness! My apologies for the lack of professionalism, that's quite embarrassing on my part. How silly to let myself fall asleep on the job.")
-Duncan.dialogues.add('00', "Welcome to Cairn's Keep. You don't look like you've been here before. It is really quite nice to see a new face stopping in.")
-Duncan.dialogues.add('10', "Welcome to Cairn's Keep. You don't look like you've been here before. It is really quite nice to see a new face stopping in.")
-Duncan.dialogues.add('000', "Oh, my name's Duncan. I'm the owner and founder, but I also help keep the place running. It's truly a pleasure to meet you...")
-Duncan.dialogues.add('100', "Oh, my name's Duncan. I'm the owner and founder, but I also help keep the place running. It's truly a pleasure to meet you...")
-Duncan.dialogues.add('0000', (player.name + "!"), action=lambda: npc_actions.handshake(Duncan))
-Duncan.dialogues.add('1000', (player.name + "!"), action=lambda: npc_actions.handshake(Duncan))
-Duncan.dialogues.add('00000', "Well I'll let you explore this place on your own. Here's a map of the building to help you get around.", action=npc_actions.give_map)
-Duncan.dialogues.add('10000', "Well I'll let you explore this place on your own. Here's a map of the building to help you get around.", action=npc_actions.give_map)
-Duncan.dialogues.add('000000', "If you have any questions, I'll be around, so don't be afraid to ask. Enjoy your visit at Cairn's Keep!", pause=True)
-Duncan.dialogues.add('100000', "If you have any questions, I'll be around, so don't be afraid to ask. Enjoy your visit at Cairn's Keep!", pause=True)
-Duncan.dialogues.add('0000000', "The stone used to construct Cairn's Keep was actually sourced locally from the area when it was built. There's a lot of history to this place.", checkpoint=True)
-Duncan.dialogues.add('1000000', "The stone used to construct Cairn's Keep was actually sourced locally from the area when it was built. There's a lot of history to this place.", checkpoint=True)
+Duncan = character_class.Character("Duncan", "squeezly...?", foyer, dialogues.Duncan_Dialogue) # Duncan Akins
+black_cat = character_class.Character("Black cat", "A lanky black cat, its eyes narrow as you gaze at it.", foyer, dialogues.BlackCat_Dialogue)
 
-Eugene = character_class.Character("Eugene", "A short stout man wearing a security uniform.", foyer)
-Eugene.dialogues.add(None, "My, it's been a while since I've seen a new face around here. Welcome to Cairn's Keep, historic museum.")
-Eugene.dialogues.add('0', "My name is Eugene. I'm the security around here, though there's not much need for security when people don't come around here like they used to...")
-Eugene.dialogues.add('00', "But anyways, you are...?")
-Eugene.dialogues.add('000', ("Pleasure to meet you, " + player.name + ". Here, take this."), action=npc_actions.give_map)
-Eugene.dialogues.add('0000', "Well, enjoy your visit, and if you have any questions, don't be afriad to ask, I'll be around.", action=lambda: Eugene.move_rooms(main_gallery))
-
-#Eugene.dialogues.add('00', "May I ask a favor of you...?")
-#Eugene.dialogues.add('000', "Well... there's a library somewhere around here... and a certain book I'm looking for. Think you can find it and bring it to me?", left_key="yes", right_key="no")
-#Eugene.dialogues.add('0000', "Magnificent! Return to me here once you've found the book.", checkpoint=True, checkpoint_condition=lambda: old_tome in player.inventory) # checkpoint condition as lambda to check during runtime
-#Eugene.dialogues.add('0001', "I didn't think you'd actually refuse...", checkpoint=True, checkpoint_condition=lambda: old_tome in player.inventory)
-#Eugene.dialogues.add('00000', "You found the book! Brilliant! Let me take a look...")
-#Eugene.dialogues.add('00010', "Ah, you went and found it anyways. Well let me take a look, will you?")
-#Eugene.dialogues.add('000000', "Ah, just as I thought. I must go check something now, excuse me.", checkpoint=True, checkpoint_condition=lambda: player.location is courtyard, action=lambda: Eugene.move_rooms(courtyard))
-#Eugene.dialogues.add('000100', "Ah, just as I thought. I must go check something now, excuse me.", checkpoint=True, checkpoint_condition=lambda: player.location is courtyard, action=lambda: Eugene.move_rooms(courtyard))
-#Eugene.dialogues.add('0000000', ("Hello, " + player.name + ". This book you found, it has secrets about this museum..."))
-#Eugene.dialogues.add('0001000', ("Hello, " + player.name + ". This book you found, it has secrets about this museum..."))
-#Eugene.dialogues.add('00000000', "You may have noticed the contents of the book are written in an obscure script. I'm not sure what it is, but I swear I've seen these symbols somewhere.")
-#Eugene.dialogues.add('00010000', "You may have noticed the contents of the book are written in an obscure script. I'm not sure what it is, but I swear I've seen these symbols somewhere.")
-#Eugene.dialogues.add('000000000', "There must be some way to decipher this code. I believe there is something important written here.", True, checkpoint_condition=lambda: decoder in player.inventory)
-#Eugene.dialogues.add('000100000', "There must be some way to decipher this code. I believe there is something important written here.", True, checkpoint_condition=lambda: decoder in player.inventory)
-#Eugene.dialogues.add('0000000000', ("What's that? You found a decoder for the tome? How marvelous. You, " + player.name + ", are quite the clever nut aren't you!"))
-#Eugene.dialogues.add('0001000000', ("What's that? You found a decoder for the tome? How marvelous. You, " + player.name + ", are quite the clever nut aren't you!"))
-
-black_cat = character_class.Character("Black cat", "A lanky black cat, its eyes narrow as you gaze at it.", foyer)
-black_cat.dialogues.add(None, 'Mrowww', checkpoint=True, checkpoint_condition=lambda: cat_treats in player.inventory)
-black_cat.dialogues.add('0', "*sniff sniff*", left_key="give treat", right_key="give all treats")
-black_cat.dialogues.add('00', "Mrow! *crunch crunch*")
-black_cat.dialogues.add('01', "Purrrr *crunch crunch*", action=lambda: player.inventory.remove(cat_treats))
-black_cat.dialogues.add('000', "Mrowww", checkpoint=True)
-black_cat.dialogues.add('010', "Mrowww.", checkpoint=True)
-
-librarian = character_class.Character("Librarian", "The museum librarian", library)
-librarian.dialogues.add(None, "Hello there, you've found historic Cairn's library.")
-
-foyer.characters.append(Eugene)
 foyer.characters.append(black_cat)
 foyer.characters.append(Duncan)
 
-library.characters.append(librarian)
-
-characters.append(Eugene)
 characters.append(black_cat)
-characters.append(librarian)
 characters.append(Duncan)

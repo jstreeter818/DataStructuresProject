@@ -10,6 +10,7 @@ class Room:
         self.items = []
         self.visited = False
         self.looked_at = False
+        self.locked = False
         
     # connects the room to another by a certain cardinal direction
     def connect(self, direction, room):
@@ -31,7 +32,9 @@ class Room:
         directions = []
 
         for direction in self.connections:
-            directions.append(direction)
+            room = self.connections[direction]
+            if not room.locked:
+                directions.append(direction)
 
         print("You can move", end = " ")
 
@@ -69,3 +72,6 @@ class Room:
                 else:
                     print(str(self.items[i].name) + ".")
             time.sleep(1)
+    
+    def unlock(self):
+        self.locked = False
