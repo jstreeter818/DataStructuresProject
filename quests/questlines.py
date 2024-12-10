@@ -35,7 +35,7 @@ class QuestLine:
 
     def check_and_progress(self):
         if self.current_node is None:
-            print("No quests active.")
+            #print("No quests active.")
             return False
         
         # if node has not been visited yet, execute actions

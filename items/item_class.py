@@ -17,7 +17,6 @@ class Item:
         self.been_used = True
         time.sleep(1)
 
-
     def look_item(self):
         self.looked_at = True
         print("You look closely at the " + self.name)

@@ -2,9 +2,10 @@ import time
 
 # a Room class to make different room objects where the player can move to and from
 class Room:
-    def __init__(self, name, description):
+    def __init__(self, name, main_description, long_description):
         self.name = name
-        self.description = description
+        self.main_description = main_description
+        self.long_description = long_description
         self.connections = {}
         self.characters = []
         self.items = []

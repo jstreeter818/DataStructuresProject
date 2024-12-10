@@ -1,5 +1,5 @@
 '''contains functions for evaluating quest advancement'''
-from objects.game_objects import player
+from game_objects.characters import player
 
 def item_in_inventory(item):
     return item in player.inventory

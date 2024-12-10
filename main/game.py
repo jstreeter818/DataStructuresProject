@@ -1,7 +1,7 @@
 '''holds the gameloop'''
 
 import time
-import objects.game_objects as game_objects
+from game_objects import rooms, characters, items
 from main.commands import talk, look, move, use, inventory, get, commands
 
 def run_game():
@@ -43,15 +43,15 @@ def run_game():
     while quit_game == False:
 
         # description of the current room
-        print(game_objects.player.location.description)
+        print(characters.player.location.main_description)
         time.sleep(1)
 
         # characters in the current room
-        game_objects.player.location.print_all_characters() 
+        characters.player.location.print_all_characters() 
         time.sleep(1)
 
         # valid exits in current room
-        game_objects.player.location.print_viable_moves()
+        characters.player.location.print_viable_moves()
         time.sleep(1)
         
         # prompts user for an action
@@ -85,13 +85,13 @@ def run_game():
             if main_command in ["move", "m"]:
                 if not argument:
                     argument = input("Which direction do you want to move? ").strip().casefold()
-                valid_commands[main_command](game_objects.player, game_objects.player.location, argument)
+                valid_commands[main_command](characters.player, characters.player.location, argument)
                 
             elif main_command in ["talk", "t"]:
-                if len(game_objects.player.location.characters) > 0:
+                if len(characters.player.location.characters) > 0:
                     if not argument:
                         argument = input("Who do you want to talk to? ").strip().casefold()
-                    valid_commands[main_command](game_objects.player.location, argument)
+                    valid_commands[main_command](characters.player.location, argument)
 
                 else:
                     print("There is no one here to talk to.")
@@ -100,20 +100,20 @@ def run_game():
             elif main_command in ["look", "l"]:
                 if not argument:
                     argument = input("What do you want to look at? ").strip().casefold()
-                valid_commands[main_command](game_objects.player, game_objects.player.location, argument)
+                valid_commands[main_command](characters.player, characters.player.location, argument)
             
             elif main_command in ["use", "u"]:
                 if not argument:
                     argument = input("What do you want to use? ").strip().casefold()
-                valid_commands[main_command](game_objects.player, game_objects.player.location, argument)
+                valid_commands[main_command](characters.player, characters.player.location, argument)
             
             elif main_command in ["get", "g"]:
                 if not argument:
                     argument = input("What do you want to pick up? ").strip().casefold()
-                valid_commands[main_command](game_objects.player, game_objects.player.location, argument)
+                valid_commands[main_command](characters.player, characters.player.location, argument)
 
             elif main_command in ["commands", "c"]:
                 valid_commands[main_command]()
 
             else:
-                valid_commands[main_command](game_objects.player)
+                valid_commands[main_command](characters.player)

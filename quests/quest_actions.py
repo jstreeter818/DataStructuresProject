@@ -1,5 +1,5 @@
 '''contains action functions to be executed during quest nodes'''
-from objects.game_objects import player
+from game_objects.characters import player
 
 def give_item(character, item):
     print("*" + character.name + "hands you '" + item.name + "', and you place it in your inventory*")

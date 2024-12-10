@@ -24,3 +24,9 @@ broken_clock = ["An old grandfather clock.",
 
 fixed_clock = ["An old grandfather clock.",
                "It really wasn't that hard to fix..."]
+
+lock_box = ["You can see it's stuffed with mail, but it's just out of your reach."]
+
+lock_box_2 = ["'Lawsuit', 'wrongful death', 'safety violations'..."]
+
+stool = ["An old wooden stool."]

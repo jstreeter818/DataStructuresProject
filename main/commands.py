@@ -16,6 +16,9 @@ def look(player, location, look_at):
         look_at = player.location.name.casefold()
 
     if look_at == location.name.casefold():
+        for line in location.long_description:
+            print(line)
+            time.sleep(1)
         location.print_items_in_room()
         return
 
