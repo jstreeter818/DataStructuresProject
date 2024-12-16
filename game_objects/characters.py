@@ -21,7 +21,7 @@ while confirm not in ['y', 'yes']:
         player_name = input("Enter your name: ")
         confirm = input("Confirm '" + player_name + "'? (y/n) ").strip().casefold()
     
-# welcomes player by name and initializes player object
+# welcomes player by name and sets player's name
 if confirm in ['y', 'yes']:
     print("Welcome, " + player_name)
     player.set_name(player_name)

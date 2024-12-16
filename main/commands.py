@@ -1,6 +1,5 @@
 import time
 
-# all the commands
 def talk(location, character_name):
     # find character to talk to    
     for character in location.characters:
@@ -85,9 +84,7 @@ def inventory(player):
 def get(player, location, to_get):
     # player must have looked at room before getting items from room
     if location.looked_at:
-
         for item in location.items:
-
             if item.name.casefold() == to_get:
                 if not item.static:
                     player.inventory.append(item)

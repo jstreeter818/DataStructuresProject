@@ -5,6 +5,9 @@ class Item:
         self.name = name
         self.description = description
         self.location = location
+        
+        # location.items.append(self) ?
+
         self.picked_up = False
         self.use_func = use_func
         # static cannot be picked up

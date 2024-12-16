@@ -125,6 +125,7 @@ class Dialogue_Tree:
             if node.checkpoint:
                 return
             
+            # keep track of whether to pause or not later
             pause_traversal = True if node.pause else False
 
             # no more branches to traverse
